@@ -97,17 +97,15 @@
                             <thead>
                                 <tr>
                                     <th>Data</th>
-                                    <th>Mandante</th>
-                                    <th>Placar</th>
                                     <th>Visitante</th>
+                                    <th>Placar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="jogo in campanhaMandante.jogos">
                                     <td>{{jogo.data | formatarData}}</td>
-                                    <td>{{jogo.mandante}}</td>
-                                    <td>{{jogo.gm}} x {{jogo.gv}}</td>
                                     <td>{{jogo.visitante}}</td>
+                                    <td>{{jogo.gm}} x {{jogo.gv}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -186,7 +184,6 @@
                                     <th>Data</th>
                                     <th>Mandante</th>
                                     <th>Placar</th>
-                                    <th>Visitante</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -194,7 +191,6 @@
                                     <td>{{jogo.data | formatarData}}</td>
                                     <td>{{jogo.mandante}}</td>
                                     <td>{{jogo.gm}} x {{jogo.gv}}</td>
-                                    <td>{{jogo.visitante}}</td>
                                 </tr>
                             </tbody>
                         </table>
