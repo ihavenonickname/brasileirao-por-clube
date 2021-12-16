@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BR 2021</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <h1 class="is-size-1">Estatísticas de clubes no Brasileirão 2021</h1>
+
+    <div id="app">
+        <div id="wraper-combo-clubes">
+            <select v-model="clubeSelecionado" id="combo-clubes" class="is-size-4">
+                <option v-for="clube in clubes" v-bind:value="clube">
+                    {{ clube }}
+                </option>
+            </select>
+        </div>
+
+        <div class="tabs is-centered">
+            <ul>
+                <li v-for="aba in abas" :class="abaSelecionada === aba.id ? 'is-active' : ''"
+                    @click="abaSelecionada = aba.id"><a>{{aba.texto}}</a></li>
+            </ul>
+        </div>
+
+        <div v-if="abaSelecionada === 'mandante'">
+            <h3 class="is-size-3">Campanha como mandante</h3>
+
+            <div class="columns">
+                <div class="column">
+                    <h4 class="is-size-4">Resumo</h4>
+                    <div class="wraper-tabela">
+                        <table class="table is-hoverable is-striped">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Pontos</strong>
+                                    </td>
+                                    <td>{{campanhaMandante.pontos}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Vitórias</strong>
+                                    </td>
+                                    <td>{{campanhaMandante.vitorias}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Empates</strong>
+                                    </td>
+                                    <td>{{campanhaMandante.empates}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Derrotas</strong>
+                                    </td>
+                                    <td>{{campanhaMandante.derrotas}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Aproveitamento</strong>
+                                    </td>
+                                    <td>{{campanhaMandante.aproveitamento}}%</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols feitos</strong>
+                                    </td>
+                                    <td>{{campanhaMandante.totalGolsFeitos}} ({{campanhaMandante.mediaGolsFeitos}} por
+                                        jogo)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols sofridos</strong>
+                                    </td>
+                                    <td>{{campanhaMandante.totalGolsSofridos}} ({{campanhaMandante.mediaGolsSofridos}}
+                                        por
+                                        jogo)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <h4 class="is-size-4">Jogos</h4>
+                    <div class="wraper-tabela">
+                        <table class="table is-hoverable is-striped">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Mandante</th>
+                                    <th>Placar</th>
+                                    <th>Visitante</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="jogo in campanhaMandante.jogos">
+                                    <td>{{jogo.data | formatarData}}</td>
+                                    <td>{{jogo.mandante}}</td>
+                                    <td>{{jogo.gm}} x {{jogo.gv}}</td>
+                                    <td>{{jogo.visitante}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="abaSelecionada === 'visitante'" class="block">
+            <h3 class="is-size-3">Campanha como visitante</h3>
+
+            <div class="columns">
+                <div class="column">
+                    <h4 class="is-size-4">Resumo</h4>
+                    <div class="wraper-tabela">
+                        <table class="table is-hoverable is-striped">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Pontos</strong>
+                                    </td>
+                                    <td>{{campanhaVisitante.pontos}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Vitórias</strong>
+                                    </td>
+                                    <td>{{campanhaVisitante.vitorias}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Empates</strong>
+                                    </td>
+                                    <td>{{campanhaVisitante.empates}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Derrotas</strong>
+                                    </td>
+                                    <td>{{campanhaVisitante.derrotas}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Aproveitamento</strong>
+                                    </td>
+                                    <td>{{campanhaVisitante.aproveitamento}}%</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols feitos</strong>
+                                    </td>
+                                    <td>{{campanhaVisitante.totalGolsFeitos}} ({{campanhaVisitante.mediaGolsFeitos}} por
+                                        jogo)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols sofridos</strong>
+                                    </td>
+                                    <td>{{campanhaVisitante.totalGolsSofridos}} ({{campanhaVisitante.mediaGolsSofridos}}
+                                        por
+                                        jogo)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <h4 class="is-size-4">Jogos</h4>
+                    <div class="wraper-tabela">
+                        <table class="table is-hoverable is-striped">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Mandante</th>
+                                    <th>Placar</th>
+                                    <th>Visitante</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="jogo in campanhaVisitante.jogos">
+                                    <td>{{jogo.data | formatarData}}</td>
+                                    <td>{{jogo.mandante}}</td>
+                                    <td>{{jogo.gm}} x {{jogo.gv}}</td>
+                                    <td>{{jogo.visitante}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="abaSelecionada === 'melhor-sprint'" class="block">
+            <h3 class="is-size-3">
+                Melhor sprint de
+                <select class="is-size-3" v-model="tamanhoSprint">
+                    <option v-for="i in tamanhoSprintPermitido" v-bind:value="i">
+                        {{ i }}
+                    </option>
+                </select>
+                jogos
+            </h3>
+
+            <div class="columns">
+                <div class="column">
+                    <h4 class="is-size-4">Resumo</h4>
+                    <div class="wraper-tabela">
+                        <table class="table is-hoverable is-striped">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Pontos</strong>
+                                    </td>
+                                    <td>{{melhorSprint.pontos}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Vitórias</strong>
+                                    </td>
+                                    <td>{{melhorSprint.vitorias}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Empates</strong>
+                                    </td>
+                                    <td>{{melhorSprint.empates}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Derrotas</strong>
+                                    </td>
+                                    <td>{{melhorSprint.derrotas}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Aproveitamento</strong>
+                                    </td>
+                                    <td>{{melhorSprint.aproveitamento}}%</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols feitos</strong>
+                                    </td>
+                                    <td>{{melhorSprint.totalGolsFeitos}} ({{melhorSprint.mediaGolsFeitos}} por jogo)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols sofridos</strong>
+                                    </td>
+                                    <td>{{melhorSprint.totalGolsSofridos}} ({{melhorSprint.mediaGolsSofridos}} por jogo)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <h4 class="is-size-4">Jogos</h4>
+                    <div class="wraper-tabela">
+                        <table class="table is-hoverable is-striped">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Mandante</th>
+                                    <th>Placar</th>
+                                    <th>Visitante</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="jogo in melhorSprint.jogos">
+                                    <td>{{jogo.data | formatarData}}</td>
+                                    <td>{{jogo.mandante}}</td>
+                                    <td>{{jogo.gm}} x {{jogo.gv}}</td>
+                                    <td>{{jogo.visitante}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="abaSelecionada === 'pior-sprint'" class="block">
+            <h3 class="is-size-3">
+                Pior sprint de
+                <select class="is-size-3" v-model="tamanhoSprint">
+                    <option v-for="i in tamanhoSprintPermitido"  v-bind:value="i">
+                        {{ i }}
+                    </option>
+                </select>
+                jogos
+            </h3>
+
+            <div class="columns">
+                <div class="column">
+                    <h4 class="is-size-4">Resumo</h4>
+                    <div class="wraper-tabela">
+                        <table class="table is-hoverable is-striped">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Pontos</strong>
+                                    </td>
+                                    <td>{{piorSprint.pontos}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Vitórias</strong>
+                                    </td>
+                                    <td>{{piorSprint.vitorias}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Empates</strong>
+                                    </td>
+                                    <td>{{piorSprint.empates}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Derrotas</strong>
+                                    </td>
+                                    <td>{{piorSprint.derrotas}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Aproveitamento</strong>
+                                    </td>
+                                    <td>{{piorSprint.aproveitamento}}%</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols feitos</strong>
+                                    </td>
+                                    <td>{{piorSprint.totalGolsFeitos}} ({{piorSprint.mediaGolsFeitos}} por jogo)</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols sofridos</strong>
+                                    </td>
+                                    <td>{{piorSprint.totalGolsSofridos}} ({{piorSprint.mediaGolsSofridos}} por jogo)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <h4 class="is-size-4">Jogos</h4>
+                    <div class="wraper-tabela">
+                        <table class="table is-hoverable is-striped">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Mandante</th>
+                                    <th>Placar</th>
+                                    <th>Visitante</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="jogo in piorSprint.jogos">
+                                    <td>{{jogo.data | formatarData}}</td>
+                                    <td>{{jogo.mandante}}</td>
+                                    <td>{{jogo.gm}} x {{jogo.gv}}</td>
+                                    <td>{{jogo.visitante}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div v-if="abaSelecionada === 'confrontos'" class="block">
+            <h3 class="is-size-3">Confrontos individuais</h3>
+
+            <div v-for="i in 3" class="columns">
+                <div v-for="campanha in confrontosIndividuais.slice((i-1)*3, i*3)" class="column">
+                    <h4 class="is-size-4">{{campanha.adversario}}</h4>
+
+                    <div class="wraper-tabela">
+                        <table class="table is-hoverable is-striped">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Pontos</strong>
+                                    </td>
+                                    <td>{{campanha.pontos}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Vitórias</strong>
+                                    </td>
+                                    <td>{{campanha.vitorias}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Empates</strong>
+                                    </td>
+                                    <td>{{campanha.empates}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Derrotas</strong>
+                                    </td>
+                                    <td>{{campanha.derrotas}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols feitos</strong>
+                                    </td>
+                                    <td>{{campanha.totalGolsFeitos}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gols sofridos</strong>
+                                    </td>
+                                    <td>{{campanha.totalGolsSofridos}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="load-div">
+        <div>
+            <p>
+                Carregando...
+            </p>
+            <p>
+                <img src="img/load.gif">
+            </p>
+        </div>
+    </div>
+</body>
+<script src="vendor/vue.js"></script>
+<script src="dataset.js"></script>
+<script src="index.js"></script>
+
+</html>
